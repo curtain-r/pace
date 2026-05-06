@@ -3,6 +3,7 @@ import { supabase } from './supabase'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
+  timeout: 12000,
 })
 
 // 请求拦截器：自动附加 Auth token

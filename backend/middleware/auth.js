@@ -1,10 +1,8 @@
-import { appendFileSync } from 'fs'
 import { supabase } from '../lib/supabase.js'
 
 function log(...args) {
   const line = `[${new Date().toISOString()}] ${args.join(' ')}\n`
   process.stdout.write(line)
-  appendFileSync('/tmp/pace-auth.log', line)
 }
 
 /**

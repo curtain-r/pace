@@ -36,11 +36,16 @@ const petOptions = [
 ] as const
 
 async function generate() {
+  if (coupleStore.loading) return
   errorMsg.value = ''
   try {
     await coupleStore.generateInviteCode()
     mode.value = 'generate'
   } catch (e: any) {
+    if (e.code === 'ECONNABORTED') {
+      errorMsg.value = '请求超时，请稍后重试'
+      return
+    }
     errorMsg.value = e.response?.data?.error || '生成失败'
   }
 }
@@ -77,18 +82,18 @@ function copyCode() {
     <div class="content">
       <div v-if="successMsg" class="success">{{ successMsg }}</div>
       <div v-else-if="mode === 'none'" class="choice">
-        <div class="option-card" @click="generate">
+        <button class="option-card option-button" :disabled="coupleStore.loading" @click="generate">
           <img class="option-cover" src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=1200&q=80" alt="发送邀请码" />
           <div class="icon">📨</div>
-          <h3>生成邀请码</h3>
+          <h3>{{ coupleStore.loading ? '生成中...' : '生成邀请码' }}</h3>
           <p>生成一个邀请码，发给 TA</p>
-        </div>
-        <div class="option-card" @click="mode = 'accept'">
+        </button>
+        <button class="option-card option-button" :disabled="coupleStore.loading" @click="mode = 'accept'">
           <img class="option-cover" src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=80" alt="输入邀请码" />
           <div class="icon">💝</div>
           <h3>输入邀请码</h3>
           <p>输入 TA 给你的邀请码</p>
-        </div>
+        </button>
       </div>
 
       <!-- 已生成邀请码 -->
@@ -173,6 +178,14 @@ header h2 { margin: 0; font-size: 1.15rem; }
   box-shadow: var(--shadow);
   cursor: pointer;
   transition: transform 0.1s;
+}
+.option-button {
+  border: none;
+  text-align: inherit;
+}
+.option-button:disabled {
+  opacity: 0.68;
+  cursor: wait;
 }
 .option-cover {
   width: 100%;

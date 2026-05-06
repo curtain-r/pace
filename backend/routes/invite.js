@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { appendFileSync } from 'fs'
 import { v4 as uuidv4 } from 'uuid'
 import { supabase } from '../lib/supabase.js'
 
@@ -23,7 +22,6 @@ const PET_PRESETS = {
 function log(...args) {
   const line = `[${new Date().toISOString()}] [invite] ${args.join(' ')}\n`
   process.stdout.write(line)
-  appendFileSync('/tmp/pace-auth.log', line)
 }
 
 /**
@@ -45,6 +43,20 @@ router.post('/generate', async (req, res) => {
 
     if (existing) {
       return res.status(400).json({ error: '你已经有绑定的伴侣了' })
+    }
+
+    // 若已有未完成的邀请码，直接复用，避免重复生成造成用户感知“卡住”
+    const { data: pendingCouple } = await supabase
+      .from('couples')
+      .select('id, invite_code')
+      .eq('user_a_id', userId)
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (pendingCouple?.invite_code) {
+      return res.json({ inviteCode: pendingCouple.invite_code, coupleId: pendingCouple.id, reused: true })
     }
 
     // 生成 6 位邀请码
