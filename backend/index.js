@@ -12,23 +12,35 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 // 中间件
+function normalizeOrigin(urlLike) {
+  if (!urlLike) return null
+  try {
+    return new URL(urlLike).origin
+  } catch {
+    return urlLike
+  }
+}
+
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:4173',
-  process.env.FRONTEND_URL,
+  normalizeOrigin(process.env.FRONTEND_URL),
 ].filter(Boolean)
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     // 允许无 origin 的请求（如 curl、Postman）
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true)
-    } else {
-      callback(new Error(`CORS blocked: ${origin}`))
+      return
     }
+    callback(new Error(`CORS blocked: ${origin}; allowed: ${allowedOrigins.join(', ')}`))
   },
   credentials: true,
-}))
+}
+
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 app.use(express.json())
 
 // 健康检查（Render 免费层保活用）
