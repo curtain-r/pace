@@ -62,18 +62,55 @@ function formatDate(dateStr: string) {
 </template>
 
 <style scoped>
-.history-page { min-height: 100vh; background: #fff8f5; display: flex; flex-direction: column; }
-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-header button { border: none; background: none; cursor: pointer; color: #ff7043; }
-header h2 { margin: 0; }
-.content { flex: 1; padding: 20px; }
-.loading, .empty { text-align: center; padding: 60px; color: #aaa; }
-.list { display: flex; flex-direction: column; gap: 12px; }
-.history-card { background: white; border-radius: 16px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.history-page { min-height: 100%; background: var(--bg); display: flex; flex-direction: column; }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px var(--space-3);
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+header button { border: none; background: none; cursor: pointer; color: var(--primary); min-height: 40px; }
+header h2 { margin: 0; font-size: 1.15rem; }
+.content { flex: 1; width: 100%; max-width: var(--max-width); margin: 0 auto; padding: var(--space-3); }
+.loading, .empty { text-align: center; padding: 60px; color: var(--text-muted); }
+.list { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.history-card { background: white; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
 .role-badge { font-size: 0.9rem; margin-bottom: 8px; }
 .role-badge.inviter { color: #ff7043; }
 .role-badge.invitee { color: #ab47bc; }
 .date { color: #888; font-size: 0.85rem; }
 .date.end { color: #bbb; margin-top: 4px; }
 .active-tag { color: #43a047; font-size: 0.85rem; margin-top: 4px; }
+
+@media (min-width: 768px) {
+  header {
+    padding-inline: var(--space-4);
+  }
+  .content {
+    max-width: var(--container-max-tablet);
+    padding: var(--space-4);
+  }
+  .list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  header {
+    padding-inline: var(--space-5);
+  }
+  .content {
+    max-width: var(--container-max-desktop);
+    padding-inline: var(--space-5);
+  }
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
 </style>

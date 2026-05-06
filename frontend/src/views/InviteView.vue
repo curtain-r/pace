@@ -90,26 +90,82 @@ function copyCode() {
 </template>
 
 <style scoped>
-.invite-page { min-height: 100vh; background: #fff8f5; display: flex; flex-direction: column; }
-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-header button { border: none; background: none; cursor: pointer; color: #ff7043; }
-header h2 { margin: 0; }
-.content { flex: 1; padding: 32px 20px; }
+.invite-page { min-height: 100%; background: var(--bg); display: flex; flex-direction: column; }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px var(--space-3);
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+header button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--primary);
+  min-height: 40px;
+}
+header h2 { margin: 0; font-size: 1.15rem; }
+.content { flex: 1; width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 32px var(--space-3); }
 .success { text-align: center; color: #43a047; font-size: 1.1rem; padding: 40px; }
-.choice { display: flex; flex-direction: column; gap: 16px; }
-.option-card { background: white; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); cursor: pointer; transition: transform 0.1s; }
+.choice { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.option-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
 .option-card:active { transform: scale(0.98); }
 .icon { font-size: 2.5rem; margin-bottom: 12px; }
 .option-card h3 { margin: 0 0 8px; }
-.option-card p { margin: 0; color: #aaa; font-size: 0.85rem; }
+.option-card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; }
 .code-display { text-align: center; padding: 20px 0; }
-.code-box { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 20px 0; }
-.code { font-size: 2rem; font-weight: bold; letter-spacing: 6px; color: #ff7043; }
-.copy-btn { border: 1px solid #ff7043; background: none; color: #ff7043; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
-.hint { color: #aaa; font-size: 0.85rem; }
+.code-box { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 20px 0; flex-wrap: wrap; }
+.code { font-size: clamp(1.4rem, 7vw, 2rem); font-weight: 800; letter-spacing: 4px; color: var(--primary); word-break: break-all; }
+.copy-btn {
+  border: 1px solid var(--primary);
+  background: none;
+  color: var(--primary);
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  min-height: 40px;
+}
+.hint { color: var(--text-muted); font-size: 0.9rem; }
 .accept-form { display: flex; flex-direction: column; gap: 12px; }
-.accept-form input { padding: 14px; border: 1px solid #eee; border-radius: 12px; font-size: 1.2rem; text-align: center; letter-spacing: 4px; outline: none; }
+.accept-form input { min-height: 46px; padding: 12px; border: 1px solid #eee; border-radius: 12px; font-size: 1.1rem; text-align: center; letter-spacing: 3px; outline: none; }
 .error { color: #e53935; font-size: 0.85rem; }
-.primary-btn { padding: 14px; background: #ff7043; color: white; border: none; border-radius: 12px; font-size: 1rem; cursor: pointer; }
+.primary-btn { min-height: 44px; padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1rem; cursor: pointer; }
 .primary-btn:disabled { opacity: 0.6; }
+
+@media (min-width: 768px) {
+  header {
+    padding-inline: var(--space-4);
+  }
+  .content {
+    max-width: var(--container-max-tablet);
+    padding-inline: var(--space-4);
+  }
+  .choice {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  header {
+    padding-inline: var(--space-5);
+  }
+  .content {
+    max-width: var(--container-max-desktop);
+    padding-inline: var(--space-5);
+  }
+}
 </style>
