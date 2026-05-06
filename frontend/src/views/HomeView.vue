@@ -42,7 +42,7 @@ function getSpeciesLabel(species: string) {
       <div class="header-inner">
         <div class="header-logo">
           <span class="header-paw">🐾</span>
-          <span class="header-title">Pace</span>
+          <span class="header-title page-title-text">Pace</span>
         </div>
         <div class="header-right">
           <span class="user-greeting">Hi, {{ authStore.user?.user_metadata?.nickname || '主人' }} 👋</span>
@@ -279,6 +279,7 @@ function getSpeciesLabel(species: string) {
 .action-card:hover { border-color: var(--primary); transform: translateY(-2px); }
 .action-card:active { transform: scale(0.96); }
 .action-icon { font-size: 1.6rem; }
+.action-card:focus-visible { border-color: var(--primary); }
 
 /* 空状态 */
 .empty-card { padding: 40px 24px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }

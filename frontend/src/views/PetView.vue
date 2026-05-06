@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePetStore } from '@/stores/pet'
 import type { RealtimeChannel } from '@supabase/supabase-js'
@@ -10,6 +10,8 @@ const chatInput = ref('')
 const chatLoading = ref(false)
 const actionMsg = ref('')
 const actionType = ref<'feed' | 'pet' | ''>('')
+const chatError = ref('')
+const chatBox = ref<HTMLElement | null>(null)
 let channel: RealtimeChannel | null = null
 
 onMounted(async () => {
@@ -40,10 +42,16 @@ async function doPet() {
 async function doChat() {
   if (!chatInput.value.trim() || chatLoading.value) return
   chatLoading.value = true
+  chatError.value = ''
   const msg = chatInput.value
   chatInput.value = ''
-  await petStore.chat(msg)
-  chatLoading.value = false
+  try {
+    await petStore.chat(msg)
+  } catch {
+    chatError.value = '消息发送失败，请稍后重试'
+  } finally {
+    chatLoading.value = false
+  }
 }
 
 function showMsg(msg: string) {
@@ -66,6 +74,16 @@ function getPetFace(species: string, mood: number) {
   }
   return getPetMood(mood)
 }
+
+watch(
+  () => petStore.chatMessages.length,
+  async () => {
+    await nextTick()
+    if (chatBox.value) {
+      chatBox.value.scrollTop = chatBox.value.scrollHeight
+    }
+  },
+)
 </script>
 
 <template>
@@ -167,6 +185,7 @@ function getPetFace(species: string, mood: number) {
                 <svg v-else width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
               </button>
             </div>
+            <p v-if="chatError" class="chat-error">{{ chatError }}</p>
           </div>
         </div>
 
@@ -307,6 +326,12 @@ function getPetFace(species: string, mood: number) {
 }
 .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .send-btn:not(:disabled):hover { transform: scale(1.1); }
+.chat-error {
+  margin: 0;
+  padding: 0 16px 12px;
+  color: #e85555;
+  font-size: 0.82rem;
+}
 
 .spinner-sm {
   width: 14px; height: 14px;

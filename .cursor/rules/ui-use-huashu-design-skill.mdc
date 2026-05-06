@@ -1,0 +1,24 @@
+---
+description: Enforce huashu-design skill for all UI work
+alwaysApply: true
+---
+
+# UI 统一使用 huashu-design skill
+
+当任务涉及 UI 设计、页面改版、组件视觉、布局样式、交互样式、设计规范对齐时，必须优先使用 `huashu-design` skill。
+
+## 适用范围
+
+- Web 页面（`*.vue`、`*.css`、`*.scss`、`*.less`）
+- 组件样式与视觉规范
+- 设计语言、排版、色彩、间距、响应式布局
+
+## 执行要求
+
+- 在开始 UI 相关实现前，先读取并遵循 `huashu-design/SKILL.md`
+- 输出方案与实现时，遵循 skill 中的设计方法与约束
+- 若需求与现有实现冲突，优先保持 design system 一致性，并说明取舍
+
+## 非 UI 任务
+
+- 纯后端逻辑、数据库、部署脚本、CI 配置等任务，可不使用该 skill。

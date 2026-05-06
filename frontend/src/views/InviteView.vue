@@ -157,6 +157,7 @@ header h2 { margin: 0; font-size: 1.15rem; }
   transition: transform 0.1s;
 }
 .option-card:active { transform: scale(0.98); }
+.option-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .icon { font-size: 2.5rem; margin-bottom: 12px; }
 .option-card h3 { margin: 0 0 8px; }
 .option-card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; }
@@ -175,6 +176,10 @@ header h2 { margin: 0; font-size: 1.15rem; }
 .hint { color: var(--text-muted); font-size: 0.9rem; }
 .accept-form { display: flex; flex-direction: column; gap: 12px; }
 .accept-form input { min-height: 46px; padding: 12px; border: 1px solid #eee; border-radius: 12px; font-size: 1.1rem; text-align: center; letter-spacing: 3px; outline: none; }
+.accept-form p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
 .pet-options {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

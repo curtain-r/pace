@@ -42,6 +42,11 @@ body {
   line-height: 1.6;
 }
 
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--primary) 80%, white 20%);
+  outline-offset: 2px;
+}
+
 /* PC 端居中容器 */
 #app {
   min-height: 100vh;
@@ -62,6 +67,7 @@ body {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .btn {
@@ -151,6 +157,12 @@ select {
 .input:focus { border-color: var(--primary); background: white; }
 .input::placeholder { color: var(--text-muted); }
 
+.page-title-text {
+  font-size: clamp(1.2rem, 1.4vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
 .text-ellipsis {
   white-space: nowrap;
   overflow: hidden;
@@ -161,6 +173,17 @@ select {
 .modal-panel {
   width: min(100% - 24px, 560px);
   margin: 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* PC 端背景装饰 */
