@@ -8,8 +8,17 @@ const router = useRouter()
 
 const mode = ref<'none' | 'generate' | 'accept'>('none')
 const acceptCode = ref('')
+const selectedSpecies = ref<'cat' | 'dog' | 'rabbit'>('cat')
+const petName = ref('')
 const errorMsg = ref('')
 const successMsg = ref('')
+const copied = ref(false)
+
+const petOptions = [
+  { type: 'cat', icon: '🐱', label: '猫咪' },
+  { type: 'dog', icon: '🐶', label: '狗狗' },
+  { type: 'rabbit', icon: '🐰', label: '兔兔' },
+] as const
 
 async function generate() {
   errorMsg.value = ''
@@ -24,7 +33,10 @@ async function generate() {
 async function accept() {
   errorMsg.value = ''
   try {
-    await coupleStore.acceptInvite(acceptCode.value)
+    await coupleStore.acceptInvite(acceptCode.value, {
+      species: selectedSpecies.value,
+      petName: petName.value.trim(),
+    })
     successMsg.value = '绑定成功！正在跳转...'
     setTimeout(() => router.push('/home'), 1500)
   } catch (e: any) {
@@ -34,6 +46,8 @@ async function accept() {
 
 function copyCode() {
   navigator.clipboard.writeText(coupleStore.inviteCode)
+  copied.value = true
+  setTimeout(() => { copied.value = false }, 1200)
 }
 </script>
 
@@ -65,7 +79,7 @@ function copyCode() {
         <p>将这个邀请码发给 TA：</p>
         <div class="code-box">
           <span class="code">{{ coupleStore.inviteCode }}</span>
-          <button class="copy-btn" @click="copyCode">复制</button>
+          <button class="copy-btn" @click="copyCode">{{ copied ? '已复制' : '复制' }}</button>
         </div>
         <p class="hint">邀请码为一次性，请勿泄露给其他人 💌</p>
       </div>
@@ -79,6 +93,25 @@ function copyCode() {
           placeholder="例如：A1B2C3D4"
           maxlength="8"
           style="text-transform: uppercase"
+        />
+        <p>选择你们要共养的宠物：</p>
+        <div class="pet-options">
+          <button
+            v-for="opt in petOptions"
+            :key="opt.type"
+            type="button"
+            :class="['pet-option', { active: selectedSpecies === opt.type }]"
+            @click="selectedSpecies = opt.type"
+          >
+            <span>{{ opt.icon }}</span>
+            <span>{{ opt.label }}</span>
+          </button>
+        </div>
+        <input
+          v-model="petName"
+          type="text"
+          placeholder="给宠物起个名字（可选）"
+          maxlength="20"
         />
         <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
         <button class="primary-btn" :disabled="coupleStore.loading" @click="accept">
@@ -142,6 +175,29 @@ header h2 { margin: 0; font-size: 1.15rem; }
 .hint { color: var(--text-muted); font-size: 0.9rem; }
 .accept-form { display: flex; flex-direction: column; gap: 12px; }
 .accept-form input { min-height: 46px; padding: 12px; border: 1px solid #eee; border-radius: 12px; font-size: 1.1rem; text-align: center; letter-spacing: 3px; outline: none; }
+.pet-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.pet-option {
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.pet-option.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: #fff4f4;
+}
 .error { color: #e53935; font-size: 0.85rem; }
 .primary-btn { min-height: 44px; padding: 10px 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1rem; cursor: pointer; }
 .primary-btn:disabled { opacity: 0.6; }

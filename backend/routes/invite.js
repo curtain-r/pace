@@ -5,6 +5,21 @@ import { supabase } from '../lib/supabase.js'
 
 const router = Router()
 
+const PET_PRESETS = {
+  cat: {
+    defaultName: '小团子',
+    personality: '慵懒可爱，喜欢被摸下巴，偶尔会撒娇',
+  },
+  dog: {
+    defaultName: '豆包',
+    personality: '活泼热情，喜欢贴贴和陪伴，会摇尾巴表达开心',
+  },
+  rabbit: {
+    defaultName: '糯米',
+    personality: '温柔安静，喜欢被轻轻摸头，偶尔会蹦跳撒欢',
+  },
+}
+
 function log(...args) {
   const line = `[${new Date().toISOString()}] [invite] ${args.join(' ')}\n`
   process.stdout.write(line)
@@ -61,10 +76,15 @@ router.post('/generate', async (req, res) => {
 router.post('/accept', async (req, res) => {
   try {
     const userId = req.user.id
-    const { code } = req.body
+    const { code, species = 'cat', petName } = req.body
 
     if (!code) {
       return res.status(400).json({ error: '请输入邀请码' })
+    }
+
+    const normalizedSpecies = String(species).toLowerCase()
+    if (!PET_PRESETS[normalizedSpecies]) {
+      return res.status(400).json({ error: '不支持的宠物类型' })
     }
 
     // 检查用户是否已有 active 的情侣关系
@@ -96,13 +116,14 @@ router.post('/accept', async (req, res) => {
     }
 
     // 创建宠物
+    const finalName = String(petName || '').trim().slice(0, 20) || PET_PRESETS[normalizedSpecies].defaultName
     const { data: pet, error: petError } = await supabase
       .from('pets')
       .insert({
         couple_id: couple.id,
-        name: '小团子',
-        species: 'cat',
-        personality: '慵懒可爱，喜欢被摸下巴，偶尔会撒娇',
+        name: finalName,
+        species: normalizedSpecies,
+        personality: PET_PRESETS[normalizedSpecies].personality,
         hunger: 80,
         mood: 80,
         intimacy: 0,

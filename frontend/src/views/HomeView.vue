@@ -24,6 +24,15 @@ function getPetStatus(val: number) {
   if (val >= 40) return { text: '还不错', color: '#fb923c' }
   return { text: '需要关注', color: '#f87171' }
 }
+
+function getSpeciesLabel(species: string) {
+  const map: Record<string, string> = {
+    cat: '小猫咪',
+    dog: '小狗狗',
+    rabbit: '小兔兔',
+  }
+  return map[species] ?? species
+}
 </script>
 
 <template>
@@ -61,7 +70,7 @@ function getPetStatus(val: number) {
             </div>
             <div class="pet-hero-info">
               <h2 class="pet-name">{{ petStore.pet.name }}</h2>
-              <p class="pet-species">{{ petStore.pet.species === 'cat' ? '小猫咪' : petStore.pet.species }}</p>
+              <p class="pet-species">{{ getSpeciesLabel(petStore.pet.species) }}</p>
               <div class="intimacy-badge">
                 <span>💕</span>
                 <span>亲密度 {{ petStore.pet.intimacy }}</span>

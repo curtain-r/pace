@@ -39,10 +39,14 @@ export const useCoupleStore = defineStore('couple', () => {
     }
   }
 
-  async function acceptInvite(code: string) {
+  async function acceptInvite(code: string, options?: { species?: 'cat' | 'dog' | 'rabbit'; petName?: string }) {
     loading.value = true
     try {
-      const res = await api.post('/api/invite/accept', { code })
+      const res = await api.post('/api/invite/accept', {
+        code,
+        species: options?.species ?? 'cat',
+        petName: options?.petName,
+      })
       // 绑定成功后刷新宠物数据
       const petStore = usePetStore()
       petStore.pet = res.data.pet

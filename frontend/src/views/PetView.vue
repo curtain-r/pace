@@ -56,6 +56,16 @@ function getPetMood(mood: number) {
   if (mood >= 40) return '😺'
   return '😿'
 }
+
+function getPetFace(species: string, mood: number) {
+  if (species === 'dog') {
+    return mood >= 40 ? '🐶' : '🐕'
+  }
+  if (species === 'rabbit') {
+    return mood >= 40 ? '🐰' : '🐇'
+  }
+  return getPetMood(mood)
+}
 </script>
 
 <template>
@@ -78,7 +88,7 @@ function getPetMood(mood: number) {
           <div class="pet-showcase card">
             <div class="showcase-bg" />
             <div class="pet-big-avatar">
-              <div class="pet-emoji">{{ getPetMood(petStore.pet.mood) }}</div>
+              <div class="pet-emoji">{{ getPetFace(petStore.pet.species, petStore.pet.mood) }}</div>
               <Transition name="bubble">
                 <div v-if="actionMsg" class="action-bubble">{{ actionMsg }}</div>
               </Transition>
@@ -138,7 +148,7 @@ function getPetMood(mood: number) {
                 :key="i"
                 :class="['message', msg.role]"
               >
-                <div v-if="msg.role === 'pet'" class="msg-avatar">🐱</div>
+                <div v-if="msg.role === 'pet'" class="msg-avatar">{{ getPetFace(petStore.pet.species, petStore.pet.mood) }}</div>
                 <div class="msg-bubble">{{ msg.content }}</div>
               </div>
             </div>
