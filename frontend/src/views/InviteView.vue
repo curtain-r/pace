@@ -15,9 +15,24 @@ const successMsg = ref('')
 const copied = ref(false)
 
 const petOptions = [
-  { type: 'cat', icon: '🐱', label: '猫咪' },
-  { type: 'dog', icon: '🐶', label: '狗狗' },
-  { type: 'rabbit', icon: '🐰', label: '兔兔' },
+  {
+    type: 'cat',
+    icon: '🐱',
+    label: '猫咪',
+    image: 'https://images.unsplash.com/photo-1513245543132-31f507417b26?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    type: 'dog',
+    icon: '🐶',
+    label: '狗狗',
+    image: 'https://images.unsplash.com/photo-1507146426996-ef05306b995a?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    type: 'rabbit',
+    icon: '🐰',
+    label: '兔兔',
+    image: 'https://images.unsplash.com/photo-1583301286816-f4f05e1e8b25?auto=format&fit=crop&w=900&q=80',
+  },
 ] as const
 
 async function generate() {
@@ -63,11 +78,13 @@ function copyCode() {
       <div v-if="successMsg" class="success">{{ successMsg }}</div>
       <div v-else-if="mode === 'none'" class="choice">
         <div class="option-card" @click="generate">
+          <img class="option-cover" src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=1200&q=80" alt="发送邀请码" />
           <div class="icon">📨</div>
           <h3>生成邀请码</h3>
           <p>生成一个邀请码，发给 TA</p>
         </div>
         <div class="option-card" @click="mode = 'accept'">
+          <img class="option-cover" src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=80" alt="输入邀请码" />
           <div class="icon">💝</div>
           <h3>输入邀请码</h3>
           <p>输入 TA 给你的邀请码</p>
@@ -103,6 +120,7 @@ function copyCode() {
             :class="['pet-option', { active: selectedSpecies === opt.type }]"
             @click="selectedSpecies = opt.type"
           >
+            <img :src="opt.image" :alt="opt.label" class="pet-option-photo" />
             <span>{{ opt.icon }}</span>
             <span>{{ opt.label }}</span>
           </button>
@@ -156,6 +174,13 @@ header h2 { margin: 0; font-size: 1.15rem; }
   cursor: pointer;
   transition: transform 0.1s;
 }
+.option-cover {
+  width: 100%;
+  height: 94px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
 .option-card:active { transform: scale(0.98); }
 .option-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .icon { font-size: 2.5rem; margin-bottom: 12px; }
@@ -194,9 +219,15 @@ header h2 { margin: 0; font-size: 1.15rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   font-weight: 700;
   cursor: pointer;
+}
+.pet-option-photo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .pet-option.active {
   border-color: var(--primary);

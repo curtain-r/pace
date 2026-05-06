@@ -12,6 +12,8 @@ const password = ref('')
 const nickname = ref('')
 const errorMsg = ref('')
 const loading = ref(false)
+const loginHeroImage =
+  'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80'
 
 async function submit() {
   errorMsg.value = ''
@@ -44,6 +46,9 @@ async function submit() {
         <div class="logo-icon">🐾</div>
         <h1 class="logo-title">Pace</h1>
         <p class="logo-sub">和 TA 一起养一只专属小宠物</p>
+        <div class="logo-visual">
+          <img :src="loginHeroImage" alt="情侣与宠物" />
+        </div>
       </div>
 
       <!-- 表单卡片 -->
@@ -140,6 +145,19 @@ async function submit() {
   margin-bottom: 8px;
 }
 .logo-sub { color: var(--text-muted); font-size: 0.95rem; }
+.logo-visual {
+  margin: 16px auto 0;
+  width: min(100%, 360px);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.logo-visual img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
 
 .form-card { width: 100%; padding: 28px 24px 24px; }
 

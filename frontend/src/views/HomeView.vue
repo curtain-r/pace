@@ -9,6 +9,10 @@ const authStore = useAuthStore()
 const coupleStore = useCoupleStore()
 const petStore = usePetStore()
 const router = useRouter()
+const homePetImage =
+  'https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=1200&q=80'
+const emptyStateImage =
+  'https://images.unsplash.com/photo-1511044568932-338cba0ad803?auto=format&fit=crop&w=1200&q=80'
 
 onMounted(async () => {
   if (authStore.user) {
@@ -63,7 +67,9 @@ function getSpeciesLabel(species: string) {
         <template v-if="coupleStore.couple && petStore.pet">
           <!-- 宠物卡片 -->
           <div class="pet-hero card" @click="router.push('/pet')">
-            <div class="pet-hero-bg" />
+            <div class="pet-hero-bg">
+              <img :src="homePetImage" alt="宠物生活场景" />
+            </div>
             <div class="pet-avatar-wrap">
               <div class="pet-avatar">🐱</div>
               <div class="pet-avatar-ring" />
@@ -134,7 +140,7 @@ function getSpeciesLabel(species: string) {
         <template v-else-if="!coupleStore.couple">
           <div class="empty-card card">
             <div class="empty-illustration">
-              <div class="empty-circle">💌</div>
+              <img :src="emptyStateImage" alt="等待绑定伴侣" class="empty-photo" />
               <div class="empty-dots">
                 <span /><span /><span />
               </div>
@@ -214,8 +220,18 @@ function getSpeciesLabel(species: string) {
 .pet-hero-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #fff5f7, #fce7f3);
   z-index: 0;
+}
+.pet-hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 245, 247, 0.8), rgba(252, 231, 243, 0.68));
+}
+.pet-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .pet-avatar-wrap {
   position: relative;
@@ -289,6 +305,14 @@ function getSpeciesLabel(species: string) {
   background: linear-gradient(135deg, var(--secondary), #fce7f3);
   border-radius: 50%; font-size: 2.5rem;
   display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+  box-shadow: 0 8px 24px rgba(255,107,107,0.2);
+}
+.empty-photo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
   margin: 0 auto 12px;
   box-shadow: 0 8px 24px rgba(255,107,107,0.2);
 }

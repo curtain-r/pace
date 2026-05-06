@@ -13,6 +13,8 @@ const actionType = ref<'feed' | 'pet' | ''>('')
 const chatError = ref('')
 const chatBox = ref<HTMLElement | null>(null)
 let channel: RealtimeChannel | null = null
+const petSceneImage =
+  'https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1400&q=80'
 
 onMounted(async () => {
   if (!petStore.pet) {
@@ -75,6 +77,15 @@ function getPetFace(species: string, mood: number) {
   return getPetMood(mood)
 }
 
+function getPetPhoto(species: string) {
+  const photoMap: Record<string, string> = {
+    cat: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=1200&q=80',
+    dog: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80',
+    rabbit: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=1200&q=80',
+  }
+  return photoMap[species] ?? photoMap.cat
+}
+
 watch(
   () => petStore.chatMessages.length,
   async () => {
@@ -104,8 +115,11 @@ watch(
         <div v-if="petStore.pet">
           <!-- 宠物展示 -->
           <div class="pet-showcase card">
-            <div class="showcase-bg" />
+            <div class="showcase-bg">
+              <img :src="petSceneImage" alt="宠物陪伴场景" />
+            </div>
             <div class="pet-big-avatar">
+              <img :src="getPetPhoto(petStore.pet.species)" class="pet-photo" :alt="petStore.pet.name" />
               <div class="pet-emoji">{{ getPetFace(petStore.pet.species, petStore.pet.mood) }}</div>
               <Transition name="bubble">
                 <div v-if="actionMsg" class="action-bubble">{{ actionMsg }}</div>
@@ -226,14 +240,36 @@ watch(
 }
 .showcase-bg {
   position: absolute; inset: 0;
-  background: linear-gradient(160deg, #fff0f5 0%, #f3e8ff 100%);
+}
+.showcase-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.9);
+}
+.showcase-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255, 240, 245, 0.75) 0%, rgba(243, 232, 255, 0.7) 100%);
 }
 .pet-big-avatar {
   position: relative; z-index: 1;
   display: inline-block; margin-bottom: 20px;
 }
+.pet-photo {
+  width: 132px;
+  height: 132px;
+  border-radius: 28px;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.14);
+}
 .pet-emoji {
-  font-size: 5rem; line-height: 1;
+  font-size: 2.2rem; line-height: 1;
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
   filter: drop-shadow(0 8px 20px rgba(255,107,107,0.25));
   animation: float 3s ease-in-out infinite;
 }

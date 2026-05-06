@@ -46,9 +46,21 @@ function formatDate(dateStr: string) {
 
     <div class="content">
       <div v-if="loading" class="loading">加载中...</div>
-      <div v-else-if="history.length === 0" class="empty">暂无绑定记录</div>
+      <div v-else-if="history.length === 0" class="empty">
+        <img
+          class="empty-image"
+          src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1200&q=80"
+          alt="暂无历史记录"
+        />
+        <p>暂无绑定记录</p>
+      </div>
       <div v-else class="list">
         <div v-for="item in history" :key="item.id" class="history-card">
+          <img
+            class="history-cover"
+            src="https://images.unsplash.com/photo-1474511320723-9a56873867b5?auto=format&fit=crop&w=1200&q=80"
+            alt="关系记录"
+          />
           <div class="role-badge" :class="item.role">
             {{ item.role === 'inviter' ? '📨 我发起的' : '💝 我接受的' }}
           </div>
@@ -79,8 +91,22 @@ header button { border: none; background: none; cursor: pointer; color: var(--pr
 header h2 { margin: 0; font-size: 1.15rem; }
 .content { flex: 1; width: 100%; max-width: var(--max-width); margin: 0 auto; padding: var(--space-3); }
 .loading, .empty { text-align: center; padding: 60px; color: var(--text-muted); }
+.empty-image {
+  width: min(100%, 260px);
+  height: 150px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin: 0 auto 12px;
+}
 .list { display: grid; grid-template-columns: 1fr; gap: 12px; }
 .history-card { background: white; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+.history-cover {
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
 .role-badge { font-size: 0.9rem; margin-bottom: 8px; }
 .role-badge.inviter { color: #ff7043; }
 .role-badge.invitee { color: #ab47bc; }
